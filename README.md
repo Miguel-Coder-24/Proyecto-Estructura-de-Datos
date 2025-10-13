@@ -57,3 +57,65 @@ Implementada con **Qt** (o **wxWidgets**), diseñada para facilitar la interacci
   void modificarPaquete(const Paquete&);
   void deshacer();
   std::vector<Paquete> obtenerPorFecha(const QDate& fecha);
+
+### 🖥️ Interfaz Gráfica (GUI)
+
+La interfaz gráfica facilita la entrada y consulta de información por parte del usuario.  
+Se recomienda usar una librería multiplataforma como **Qt** (o **wxWidgets**) para crear la GUI, ya que ofrecen controles avanzados (formularios, calendarios, tablas, etc.) ideales para este sistema.
+
+### 🧾 Componentes principales
+
+#### 🟢 Formulario de registro de paquetes
+Formulario con campos para ingresar los datos del paquete:
+- **ID del paquete**: identificador único del envío.  
+- **Nombre del cliente**: remitente o destinatario.  
+- **Fecha y hora de depósito**: cuándo se deja el paquete para envío (`QDateTimeEdit`).  
+- **Fecha y hora de entrega**: cuándo se entrega (puede ser estimada o vacía al inicio).  
+- **Dirección y estado** (opcional): información adicional del envío.  
+
+> Al presionar **“Guardar/Agregar”**, el sistema valida los campos y almacena el paquete en memoria.  
+> Widgets sugeridos: `QLineEdit`, `QDateEdit`, `QTimeEdit`, `QPushButton`.
+
+---
+
+#### 🟣 Calendario de movimientos diarios
+El calendario permite navegar entre fechas y ver los movimientos del día.  
+Se puede implementar con `QCalendarWidget`, que muestra un mes completo y permite seleccionar una fecha con eventos.
+
+- Al seleccionar una fecha, se actualiza la lista de paquetes depositados o entregados.  
+- Se pueden resaltar días con movimientos mediante formatos personalizados en el calendario.  
+- En wxWidgets, los equivalentes son `wxCalendarCtrl` o `wxDatePickerCtrl`.
+
+---
+
+#### 🟡 Listado de registros y detalle diario
+Muestra todos los paquetes registrados en la fecha seleccionada (depósitos o entregas).
+
+- Implementación sugerida: `QTableWidget` o `QListWidget`.  
+- Columnas típicas: **ID**, **Cliente**, **Hora depósito**, **Hora entrega**, **Estado**.  
+- Permite ordenar, filtrar y seleccionar registros individuales para editar o eliminar.
+
+---
+
+#### 🔵 Selección, modificación y eliminación de registros
+El usuario puede seleccionar un registro y:
+- **Editar:** abre el formulario con los datos precargados.  
+- **Eliminar:** solicita confirmación y borra el registro.  
+- Tras cada cambio, la vista se actualiza automáticamente.
+
+> Botones sugeridos: `QPushButton("Editar")`, `QPushButton("Eliminar")`.
+
+---
+
+#### 🟠 Filtros por hora del día
+Permiten mostrar solo los movimientos dentro de un rango horario específico (ej. 08:00–12:00).
+
+Opciones:
+- Campos “Desde” y “Hasta” (`QTimeEdit`) para definir el intervalo manualmente.  
+- O botones rápidos: “Mañana”, “Tarde”, “Noche”.
+
+Cuando se aplica un filtro, el sistema recorre los registros del día y muestra solo los que coinciden en el rango indicado.  
+Esto optimiza la consulta en una empresa que opera **24 horas**.
+
+
+  
