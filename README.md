@@ -47,6 +47,55 @@ Implementada con **Qt** (o **wxWidgets**), diseñada para facilitar la interacci
 ---
 
 ## 🧩 Diseño Modular
+## 🧭 Flujo general del sistema
+
+El siguiente diagrama muestra cómo interactúan los componentes principales del sistema de registro de paquetes en C++ con interfaz gráfica Qt.
+
+- **MainWindow**: Ventana principal con calendario, tabla y botones.  
+- **DialogoPaquete**: Formulario emergente para ingresar o editar paquetes.  
+- **GestorPaquetes**: Lógica interna que maneja las estructuras de datos (`std::vector`, `std::queue`, `std::stack`).  
+- **Estructuras STL**: Usadas para almacenar, registrar y deshacer operaciones.
+
+```mermaid
+flowchart TD
+    %% --- Nodos principales ---
+    A[👤 Usuario] -->|Abre aplicación| B[🪟 MainWindow]
+
+    %% Interacciones principales
+    B -->|Presiona "Nuevo"| C[📝 DialogoPaquete (Nuevo)]
+    B -->|Presiona "Editar"| D[✏️ DialogoPaquete (Editar)]
+    B -->|Presiona "Eliminar"| E[🗑️ GestorPaquetes.eliminarPaquete()]
+    B -->|Presiona "Deshacer"| F[↩️ GestorPaquetes.deshacer()]
+    B -->|Selecciona fecha en calendario| G[📅 Actualizar tabla del día]
+
+    %% Desde diálogo
+    C -->|Confirma datos| H[➕ agregarPaquete()]
+    D -->|Confirma cambios| I[🔄 modificarPaquete()]
+
+    %% Flujo del gestor
+    H -->|Agrega al vector| J[(🗂️ Base de datos en memoria - std::vector)]
+    I -->|Actualiza registro| J
+    E -->|Elimina del vector| J
+    F -->|Reversa última acción| J
+
+    %% Estructuras adicionales
+    J -->|Entrega completada| K[(📦 Cola circular - std::queue)]
+    J -->|Registro de acción| L[(🧱 Pila de deshacer - std::stack)]
+
+    %% Resultado visual
+    J -->|Actualiza lista| M[📋 Tabla en MainWindow]
+    M -->|Muestra datos actualizados| B
+
+    %% Estilos
+    classDef ui fill:#cce5ff,stroke:#004085,color:#004085,stroke-width:1px;
+    classDef logic fill:#d4edda,stroke:#155724,color:#155724,stroke-width:1px;
+    classDef data fill:#fff3cd,stroke:#856404,color:#856404,stroke-width:1px;
+
+    class A,B,C,D,M ui
+    class E,F,H,I,J,K,L logic
+    class G data
+``
+---
 
 ### 🧱 1. Lógica de datos
 - `struct Paquete`: contiene la información de cada envío.  
