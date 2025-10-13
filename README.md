@@ -51,21 +51,15 @@ Implementada con **Qt** (o **wxWidgets**), diseñada para facilitar la interacci
 
 El siguiente diagrama muestra cómo interactúan los componentes principales del sistema de registro de paquetes en C++ con interfaz gráfica Qt.
 
-- **MainWindow**: Ventana principal con calendario, tabla y botones.  
-- **DialogoPaquete**: Formulario emergente para ingresar o editar paquetes.  
-- **GestorPaquetes**: Lógica interna que maneja las estructuras de datos (`std::vector`, `std::queue`, `std::stack`).  
-- **Estructuras STL**: Usadas para almacenar, registrar y deshacer operaciones.
-
 ```mermaid
 flowchart TD
-    %% --- Nodos principales ---
     A[👤 Usuario] -->|Abre aplicación| B[🪟 MainWindow]
 
     %% Interacciones principales
-    B -->|Presiona "Nuevo"| C[📝 DialogoPaquete (Nuevo)]
-    B -->|Presiona "Editar"| D[✏️ DialogoPaquete (Editar)]
-    B -->|Presiona "Eliminar"| E[🗑️ GestorPaquetes.eliminarPaquete()]
-    B -->|Presiona "Deshacer"| F[↩️ GestorPaquetes.deshacer()]
+    B -->|Presiona Nuevo| C[📝 DialogoPaquete (Nuevo)]
+    B -->|Presiona Editar| D[✏️ DialogoPaquete (Editar)]
+    B -->|Presiona Eliminar| E[🗑️ GestorPaquetes.eliminarPaquete()]
+    B -->|Presiona Deshacer| F[↩️ GestorPaquetes.deshacer()]
     B -->|Selecciona fecha en calendario| G[📅 Actualizar tabla del día]
 
     %% Desde diálogo
@@ -73,14 +67,14 @@ flowchart TD
     D -->|Confirma cambios| I[🔄 modificarPaquete()]
 
     %% Flujo del gestor
-    H -->|Agrega al vector| J[(🗂️ Base de datos en memoria - std::vector)]
+    H -->|Agrega al vector| J[(🗂️ std::vector - Base de datos en memoria)]
     I -->|Actualiza registro| J
     E -->|Elimina del vector| J
     F -->|Reversa última acción| J
 
     %% Estructuras adicionales
-    J -->|Entrega completada| K[(📦 Cola circular - std::queue)]
-    J -->|Registro de acción| L[(🧱 Pila de deshacer - std::stack)]
+    J -->|Entrega completada| K[(📦 std::queue - Entregas recientes)]
+    J -->|Registro de acción| L[(🧱 std::stack - Pila de deshacer)]
 
     %% Resultado visual
     J -->|Actualiza lista| M[📋 Tabla en MainWindow]
